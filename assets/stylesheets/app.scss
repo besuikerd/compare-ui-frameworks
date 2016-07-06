@@ -1,4 +1,7 @@
 @import '~purecss-sass';
+$fa-font-size-base: 30px;
 
-body{
-}
+$fa-font-path: "../../node_modules/font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome';
+
+@import './todo.scss';

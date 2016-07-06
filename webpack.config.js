@@ -15,7 +15,7 @@ module.exports = {
 
   output: {
     path: '/',
-    publicPath: 'http://localhost:3000/dist',
+    publicPath: 'http://localhost:3000/',
     filename: "[name].js",
     chunkFilename: '[chunkhash.js]'
   },
@@ -30,7 +30,6 @@ module.exports = {
           presets: ["es2015", "stage-0", "react"]
         }
       },
-
 
       {
         test: /(\.scss|\.css)$/,
@@ -53,13 +52,18 @@ module.exports = {
         loader: 'json'
       },
 
+
+      //fonts
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+
       //put React in the global namespace
       { test: require.resolve('react'), loader: 'expose?React' }
     ]
   },
   postcss: [autoprefixer],
 
-  devtool: "source-map",
+  devtool: "eval-source-map",
   resolve: {
     modulesDirectories: [ "node_modules", path.join(__dirname, 'assets/js'), path.join(__dirname, 'assets') ]
   },

@@ -42,3 +42,6 @@ jspm_packages
 
 # Elm
 elm-stuff
+
+# database files
+*.db

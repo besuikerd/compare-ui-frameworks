@@ -3,7 +3,8 @@ import m from 'mithril';
 
 const model = {
   message(){
-    return 'Todo';
+    return 'Todo' +
+      '';
   }
 };
 
