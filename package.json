@@ -19,6 +19,7 @@
     "express-session": "^1.14.0",
     "font-awesome": "^4.6.3",
     "hogan-express": "^0.5.2",
+    "jquery": "^3.0.0",
     "method-override": "^2.3.6",
     "mithril": "^0.2.5",
     "mobx": "^2.3.4",
