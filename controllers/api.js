@@ -63,7 +63,7 @@ Object.keys(tables).forEach(tableName => {
       req.db[tableName].insert(obj);
     }
     res.redirect(`${tableName}/new`);
-  })
+  });
 
   router.delete(`/${tableName}/:id`, (req, res) => {
     const _id = req.params['id'];

@@ -22,10 +22,10 @@ export default class Frameworks extends Component{
 
           const className = classNames(
             'pure-menu-item',
-            {'pure-menu-selected': router.isActive('/frameworks/' + framework)}
+            {'pure-menu-selected': router.isActive('/' + framework)}
           );
           return <li className={className} key={framework}>
-            <Link className="pure-menu-link" to={"/frameworks/" + framework}>{framework}
+            <Link className="pure-menu-link" to={"/" + framework}>{framework}
             </Link></li>
         } , frameworks);
 

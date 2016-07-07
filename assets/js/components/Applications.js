@@ -23,7 +23,7 @@ export default class Applications extends Component{
 
     const menuItems =
       R.map((application) => {
-        const path = `/frameworks/${framework}/${application}`;
+        const path = `/${framework}/${application}`;
         const className = classnames(
           'pure-menu-item',
           {'pure-menu-selected': router.isActive(path)}

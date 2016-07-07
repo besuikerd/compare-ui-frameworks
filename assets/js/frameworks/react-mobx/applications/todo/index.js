@@ -9,27 +9,36 @@ const Loading = () => {
 const Todos = ({todos}) => {
   return <table className="pure-table">
     <thead>
-      <th>
-        Task
-      </th>
-      <th>
-        Status
-      </th>
+      <tr>
+        <th>
+          Task
+        </th>
+        <th>
+          Status
+        </th>
+
+      </tr>
     </thead>
-    {
-      todos.map(todo =>
-        <tr key={todo._id}>
-          <td>
-            {todo.task}
-          </td>
-          <td>
-            {todo.finished ? 'finished' : 'pending'}
-          </td>
-        </tr>
-      )
-    }
+
+    <tbody>
+      {
+        todos.map(todo =>
+          <tr key={todo._id}>
+            <td>
+              {todo.task}
+            </td>
+            <td>
+              {todo.finished ? 'finished' : 'pending'}
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+
   </table>;
-}
+};
+
+
 export default class App extends Component{
   constructor(props){
     super(props);
