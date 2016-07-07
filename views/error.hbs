@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oops something went wrong</title>
+</head>
+<body>
+
+<h1>Error</h1>
+<p>
+    {{message}}
+</p>
+
+{{#if error}}
+
+    <pre>
+        {{error.stack}}
+    </pre>
+{{/if}}
+
+</body>
+</html>

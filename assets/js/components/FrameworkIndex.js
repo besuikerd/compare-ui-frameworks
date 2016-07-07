@@ -1,5 +1,5 @@
 import { Component, PropTypes } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { MarkdownPreview } from 'react-marked-markdown';
 
 export default class FrameworkIndex extends Component{
   static propTypes = {
@@ -13,7 +13,7 @@ export default class FrameworkIndex extends Component{
       name
     } = this.props;
 
-    const index = framework !== undefined ? <ReactMarkdown source={framework.description}/> : <p>Unknown framework</p>
+    const index = framework !== undefined ? <MarkdownPreview value={framework.description}/> : <p>Unknown framework</p>
 
     return <div>
       <h1>{name}</h1>

@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Moar.Main exposing (..)
 
 import Html exposing (..)
 

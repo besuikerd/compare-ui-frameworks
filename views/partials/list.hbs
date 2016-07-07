@@ -1,0 +1,29 @@
+<table class="pure-table">
+    <thead>
+        <tr>
+            {{#each schema}}
+                <th>{{@key}}</th>
+            {{/each}}
+            <th></th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+        {{#each entities}}
+            <tr>
+                {{#each ../schema}}
+                    <td>
+                        {{lookup ../this @key}}
+                    </td>
+                {{/each}}
+                <td>
+                    <form method="post" action="/api/{{../name}}/{{_id}}">
+                        <input type="hidden" name="_method" value="delete" enctype="application/x-www-form-urlencoded"/>
+                        <input type="submit" value="x"/>
+                    </form>
+                </td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>

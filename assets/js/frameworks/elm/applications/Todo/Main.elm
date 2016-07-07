@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Todo.Main exposing (..)
 
 import Html exposing (..)
 import Html.App as App

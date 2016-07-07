@@ -1,0 +1,14 @@
+<form class="pure-form pure-form-stacked" method="post" action="/api/{{name}}">
+    <fieldset>
+        <legend>
+            Create {{@key}}
+        </legend>
+
+        {{#each schema}}
+            {{> (dynamicPartial 'input' this) name=@key index=@index}}
+        {{/each}}
+        <input type="submit" class="pure-button pure-button-primary" value="Create"/>
+    </fieldset>
+</form>
+
+{{>list entities=entities schema=schema name=name}}
