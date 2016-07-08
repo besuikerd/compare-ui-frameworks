@@ -5,6 +5,7 @@
                 <th>{{@key}}</th>
             {{/each}}
             <th></th>
+            <th></th>
         </tr>
 
     </thead>
@@ -12,17 +13,34 @@
     <tbody>
         {{#each entities}}
             <tr>
-                {{#each ../schema}}
+                <form class="pure-form" method="post" action="/api/{{../name}}/{{_id}}" enctype="application/x-www-form-urlencoded">
+                    <input type="hidden" name="_method" value="put"/>
+                    {{#each ../schema}}
+                        <td>
+                            {{> (dynamicPartial 'input' this) hideLabel=1 name=@key index=@index value=(lookup ../this @key)}}
+                        </td>
+                    {{/each}}
                     <td>
-                        {{lookup ../this @key}}
+                        <input type="submit" value="Edit"/>
                     </td>
-                {{/each}}
-                <td>
-                    <form method="post" action="/api/{{../name}}/{{_id}}">
-                        <input type="hidden" name="_method" value="delete" enctype="application/x-www-form-urlencoded"/>
-                        <input type="submit" value="x"/>
-                    </form>
-                </td>
+                    <td>
+                        <button class="pure-button" onclick="(function(){
+                            var req = new XMLHttpRequest();
+                            var params= '_method=delete'
+                            req.open('POST', '/api/{{../name}}/{{_id}}')
+                            req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                            req.onreadystatechange = (function(e){
+                               if(req.readyState == 4){
+                                    window.location = req.responseURL;
+                                }
+                            });
+                            req.send(params);
+                        })()">
+                            Delete
+                        </button>
+                    </td>
+
+                </form>
             </tr>
         {{/each}}
     </tbody>

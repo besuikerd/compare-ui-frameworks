@@ -1,4 +1,8 @@
-<label>
+{{#unless hideLabel}}
+    <label>
     {{name}}
-    <input name={{name}} type="text" {{#unless index}}autofocus{{/unless}}/>
-</label>
+{{/unless}}
+    <input name={{name}} type="text" {{#unless index}}autofocus{{/unless}} value="{{value}}"/>
+{{#unless hideLabel}}
+    </label>
+{{/unless}}

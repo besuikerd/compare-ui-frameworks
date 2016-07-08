@@ -1,4 +1,8 @@
-<label class="pure-checkbox">
-    <input name={{name}} type="checkbox" {{#unless index}}autofocus{{/unless}}/>
+{{#unless hideLabel}}
+    <label class="pure-checkbox">
+{{/unless}}
+    <input name={{name}} type="checkbox" {{#unless index}}autofocus{{/unless}} {{#if value}}checked{{/if}}/>
+{{#unless hideLabel}}
     {{name}}
-</label>
+    </label>
+{{/unless}}

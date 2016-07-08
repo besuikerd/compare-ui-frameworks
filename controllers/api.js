@@ -11,6 +11,32 @@ Object.keys(tables).forEach(tableName => {
   const table = tables[tableName];
   const schema = table.schema;
 
+  function parseEntity(req, res){
+    const params = req.body;
+    const obj = {};
+    let success = true;
+    Object.keys(schema).forEach((key) => {
+      const param = params[key];
+      if(param === undefined){
+        if(schema[key] == 'boolean'){ //
+          obj[key] = false;
+        } else{
+          success = false;
+          req.flash('warning', `missing parameter ${key}`);
+        }
+      } else{
+        try{
+          obj[key] = typeParser[schema[key]](param)
+        } catch(e){
+          req.flash('warning', e.message);
+          success = false;
+        }
+      }
+    });
+    if(success){
+      return obj;
+    }
+  }
 
   router.get(`/${tableName}`, (req, res) => {
     req.db[tableName].find({}, (err, docs) => {
@@ -33,32 +59,8 @@ Object.keys(tables).forEach(tableName => {
   });
 
   router.post(`/${tableName}`, (req, res) => {
-    const params = req.body;
-
-    const obj = {};
-
-    let success = true;
-    Object.keys(schema).forEach((key) => {
-      const param = params[key];
-      if(param === undefined){
-        if(schema[key] == 'boolean'){ //
-          obj[key] = false;
-        } else{
-          success = false;
-          req.flash('warning', `missing parameter ${key}`);
-        }
-      } else{
-        try{
-          obj[key] = typeParser[schema[key]](param)
-        } catch(e){
-          req.flash('warning', e.message);
-          success = false;
-        }
-        console.log(`got <paramet></paramet>er ${key}`);
-      }
-    });
-
-    if(success){
+    const obj = parseEntity(req,res);
+    if(obj){
       req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
       req.db[tableName].insert(obj);
     }
@@ -77,6 +79,17 @@ Object.keys(tables).forEach(tableName => {
       });
     });
   })
+
+  router.put(`/${tableName}/:id`, (req, res) => {
+    const obj = parseEntity(req, res);
+    if(obj) {
+      console.log(obj);
+      req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`)
+      req.db[tableName].update({_id: req.params['id']}, obj);
+    }
+    res.redirect(`/api/${tableName}/new`);
+  })
 });
+
 
 module.exports = router;
