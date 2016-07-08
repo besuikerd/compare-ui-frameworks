@@ -21,10 +21,10 @@
                         </td>
                     {{/each}}
                     <td>
-                        <input type="submit" value="Edit"/>
+                        <input class="pure-button pure-button-secondary" type="submit" value="Edit"/>
                     </td>
                     <td>
-                        <button class="pure-button" onclick="(function(){
+                        <button class="pure-button pure-button-error" onclick="(function(){
                             var req = new XMLHttpRequest();
                             var params= '_method=delete'
                             req.open('POST', '/api/{{../name}}/{{_id}}')

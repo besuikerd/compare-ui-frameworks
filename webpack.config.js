@@ -5,6 +5,7 @@ var autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
+    'frameworks': 'frameworks',
     app: [
       'app',
       'stylesheets/app.scss',

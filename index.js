@@ -29,15 +29,15 @@ const handlebars = require('express-handlebars').create({
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars.engine);
 
-// app.use(webpackDevMiddleware(webpackCompiler, {
-//   publicPath: '/',
-//
-//   stats: {
-//     colors: true
-//   }
-// }));
+app.use(webpackDevMiddleware(webpackCompiler, {
+  publicPath: '/',
 
-// app.use(webpackHotMiddleware(webpackCompiler));
+  stats: {
+    colors: true
+  }
+}));
+
+app.use(webpackHotMiddleware(webpackCompiler));
 
 app.use(logger('dev'));
 app.use(cookieParser('dsa'));
