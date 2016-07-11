@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+const io = require('socket.io');
+const http = require('http');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const database = require('./lib/database');
@@ -66,8 +68,13 @@ app.use(methodOverride(function(req, res){
 
 database.load('db', true, function(err, db){
   if(err) throw err.message;
+
+  const server = http.Server(app)
+  const socket = io(server);
+
   app.use((req, res, next) => {
     req.db = db;
+    req.io = socket;
     next();
   });
 
@@ -88,5 +95,5 @@ database.load('db', true, function(err, db){
     });
   });
 
-  app.listen(port, () => console.log(`server listening on port ${port}`));
+  server.listen(port, () => console.log(`server listening on port ${port}`));
 });

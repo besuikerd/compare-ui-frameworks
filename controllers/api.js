@@ -43,6 +43,7 @@ Object.keys(tables).forEach(tableName => {
       if(err) {
         res.render('error', {error: err});
       } else{
+        // req.io.of(`/${tableName}`.emit('read', docs));
         res.json(docs);
       }
     })
@@ -61,8 +62,9 @@ Object.keys(tables).forEach(tableName => {
   router.post(`/${tableName}`, (req, res) => {
     const obj = parseEntity(req,res);
     if(obj){
-      req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
       req.db[tableName].insert(obj);
+      req.io.of(`/${tableName}`).emit('create', obj);
+      req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
     }
     res.redirect(`${tableName}/new`);
   });
@@ -74,6 +76,7 @@ Object.keys(tables).forEach(tableName => {
       if(err) throw err;
       req.db[tableName].remove({_id: req.params['id']}, (err) => {
         if(err) throw err;
+        req.io.of(`/${tableName}`).emit('delete', obj);
         req.flash('info_unsafe', `removed <pre>${escape(JSON.stringify(obj))}</pre> from ${tableName}`);
         res.redirect(`/api/${tableName}/new`);
       });
@@ -86,6 +89,7 @@ Object.keys(tables).forEach(tableName => {
       console.log(obj);
       req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`)
       req.db[tableName].update({_id: req.params['id']}, obj);
+      req.io.of(`/${tableName}`).emit('update', obj);
     }
     res.redirect(`/api/${tableName}/new`);
   })

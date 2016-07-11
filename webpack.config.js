@@ -5,10 +5,10 @@ var autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    'frameworks': 'frameworks',
+    styles: 'stylesheets/app.scss',
+    frameworks: 'frameworks',
     app: [
       'app',
-      'stylesheets/app.scss',
       'webpack/hot/dev-server',
       'webpack-hot-middleware/client?reload=true'
     ]

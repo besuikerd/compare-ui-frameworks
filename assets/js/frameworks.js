@@ -12,8 +12,6 @@ import FrameworkIndex from 'components/FrameworkIndex';
 import NotFound from 'components/NotFound';
 import frameworks from 'frameworks/frameworks';
 
-console.log('hello')
-
 const container = document.getElementById('app-container');
 
 const history = useRouterHistory(createHistory)({
