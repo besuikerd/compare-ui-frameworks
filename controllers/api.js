@@ -67,6 +67,49 @@ module.exports = (app) => {
       });
     });
 
+    router.get(`/${tableName}/find`, (req, res) => {
+      console.log('params', req.params);
+      const query = req.param('query');
+      if(query === undefined){
+        res.render('error', {error: new Error('No query object parameter sent')});
+      } else{
+        try{
+          const parsed = JSON.parse(query)
+          req.db[tableName].find(parsed, (err, docs) => {
+            if(err) {
+              res.render('error', {error: err});
+            } else{
+              res.json(docs)
+            }
+          })
+        } catch(e){
+          res.render('error', {error: e});
+        }
+      }
+    });
+
+    router.get(`/${tableName}/findOne`, (req, res) => {
+      console.log('params', req.params);
+      const query = req.param('query');
+      if(query === undefined){
+        res.render('error', {error: new Error('No query object parameter sent')});
+      } else{
+        try{
+          const parsed = JSON.parse(query)
+          req.db[tableName].findOne(parsed, (err, docs) => {
+            if(err) {
+              res.render('error', {error: err});
+            } else{
+              res.json(docs)
+            }
+          })
+        } catch(e){
+          res.render('error', {error: e});
+        }
+      }
+    });
+
+
     router.post(`/${tableName}`, (req, res) => {
       const obj = parseEntity(req,res);
       if(obj){

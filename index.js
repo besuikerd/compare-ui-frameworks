@@ -30,15 +30,15 @@ const handlebars = require('express-handlebars').create({
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars.engine);
 
-app.use(webpackDevMiddleware(webpackCompiler, {
-  publicPath: '/',
-
-  stats: {
-    colors: true
-  }
-}));
-
-app.use(webpackHotMiddleware(webpackCompiler));
+// app.use(webpackDevMiddleware(webpackCompiler, {
+//   publicPath: '/',
+//
+//   stats: {
+//     colors: true
+//   }
+// }));
+//
+// app.use(webpackHotMiddleware(webpackCompiler));
 
 app.use(logger('dev'));
 app.use(cookieParser('dsa'));
@@ -65,9 +65,9 @@ app.use(methodOverride(function(req, res){
 }));
 
 
-database.load('db', true, function(err, db){
-  if(err) throw err.message;
 
+
+database.load('db', true).then(db => {
   const server = http.Server(app)
   const socket = io(server);
   app.io = socket;
