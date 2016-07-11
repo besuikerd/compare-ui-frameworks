@@ -17,7 +17,7 @@
                     <input type="hidden" name="_method" value="put"/>
                     {{#each ../schema}}
                         <td>
-                            {{> (dynamicPartial 'input' this) hideLabel=1 name=@key index=@index value=(lookup ../this @key)}}
+                            {{> (dynamicPartial 'input' this) schema=this hideLabel=1 name=@key index=@index value=(lookup ../this @key) dependencies=../../dependencies}}
                         </td>
                     {{/each}}
                     <td>

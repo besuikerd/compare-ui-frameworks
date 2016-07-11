@@ -5,7 +5,7 @@
         </legend>
 
         {{#each schema}}
-            {{> (dynamicPartial 'input' this) name=@key index=@index}}
+            {{> (dynamicPartial 'input' this) schema=this name=@key index=@index dependencies=../dependencies}}
         {{/each}}
         <input type="submit" class="pure-button pure-button-primary" value="Create"/>
     </fieldset>

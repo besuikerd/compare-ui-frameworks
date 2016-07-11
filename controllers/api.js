@@ -6,6 +6,8 @@ const router = express.Router();
 const typeParser = require('../lib/type-parser');
 const tables = requireDir('../lib/tables');
 const escape = require('escape-html');
+const database = require('../lib/database');
+const Promise = require('bluebird');
 
 module.exports = (app) => {
   Object.keys(tables).forEach(tableName => {
@@ -34,7 +36,11 @@ module.exports = (app) => {
           }
         } else{
           try{
-            obj[key] = typeParser[schema[key]](param)
+            if(database.isPrimitive(schema[key])){
+              obj[key] = typeParser[schema[key]](param);
+            } else{
+              obj[key] = param;
+            }
           } catch(e){
             req.flash('warning', e.message);
             success = false;
@@ -58,11 +64,21 @@ module.exports = (app) => {
     });
 
     router.get(`/${tableName}/new`, (req, res) => {
-      req.db[tableName].find({}, (err, docs) => {
-        res.render('crud/new', {
-          schema: table.schema,
-          name: tableName,
-          entities: docs
+      req.db[tableName].findAsync({}).then(docs => {
+        const dependencies = database.getDependencies(table.schema);
+        Promise.reduce(dependencies, (deps, dep) => {
+          return req.db[dep].findAsync({}).then(depItems => {
+            const obj = {};
+            obj[dep] = depItems;
+            return Object.assign({}, deps, obj);
+          });
+        }, {}).then(deps => {
+          res.render('crud/new', {
+            schema: table.schema,
+            name: tableName,
+            entities: docs,
+            dependencies: deps
+          });
         });
       });
     });
@@ -138,7 +154,7 @@ module.exports = (app) => {
       const obj = parseEntity(req, res);
       if(obj) {
         console.log(obj);
-        req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`)
+        req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> in ${tableName}`)
         req.db[tableName].update({_id: req.params['id']}, obj);
         req.io.of(`/${tableName}`).emit('update', obj);
       }

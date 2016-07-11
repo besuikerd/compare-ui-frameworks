@@ -1,0 +1,19 @@
+
+{{#unless hideLabel}}
+    <label class="pure-checkbox">
+    {{name}}
+{{/unless}}
+
+
+<select name="{{name}}">
+    {{#each (lookup dependencies schema)}}
+        <option value="{{_id}}" {{#if (equals _id ../value)}}selected{{/if}}>
+            {{json this}}
+        </option>
+    {{/each}}
+</select>
+
+
+{{#unless hideLabel}}
+    </label>
+{{/unless}}
