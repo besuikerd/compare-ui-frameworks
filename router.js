@@ -1,12 +1,14 @@
 const express = require('express');
-const router = express.Router();
 
-const api = require('./controllers/api');
-const frameworks = require('./controllers/frameworks');
+module.exports = (app) => {
+  const router = express.Router();
 
-router.use('/api', api);
-router.use('/frameworks', frameworks);
+  const api = require('./controllers/api')(app);
+  const frameworks = require('./controllers/frameworks');
 
-router.get('/', (req, res) => res.redirect('/frameworks'));
+  router.use('/api', api);
+  router.use('/frameworks', frameworks);
 
-module.exports = router;
+  router.get('/', (req, res) => res.redirect('/frameworks'));
+  return router;
+};

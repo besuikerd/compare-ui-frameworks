@@ -10,7 +10,6 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const webpackConfig = require('./webpack.config');
-const router = require('./router');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
@@ -71,6 +70,7 @@ database.load('db', true, function(err, db){
 
   const server = http.Server(app)
   const socket = io(server);
+  app.io = socket;
 
   app.use((req, res, next) => {
     req.db = db;
@@ -78,6 +78,8 @@ database.load('db', true, function(err, db){
     next();
   });
 
+
+  const router = require('./router')(app);
   app.use('/', router);
 
   app.use(function(req, res, next) {
