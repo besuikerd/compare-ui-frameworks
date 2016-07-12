@@ -10,6 +10,8 @@ export default {
   description: readme,
   applications,
   mount: (container, App) => {
+    console.log(App);
+
     const wrappedApplication = <div>
       <DevTools/>
       <App/>

@@ -15,12 +15,12 @@ export default class FrameworkApplication extends Component {
   };
 
   componentDidMount(){
-    this.mountFrameworkApplication();
+    this.mountFrameworkApplication(this.props);
   }
 
   componentWillReceiveProps(props){
     this.unmountFrameworkApplication();
-    this.mountFrameworkApplication();
+    this.mountFrameworkApplication(props);
   }
 
   componentWillUnmount(){
@@ -35,12 +35,12 @@ export default class FrameworkApplication extends Component {
     }
   }
 
-  mountFrameworkApplication(){
+  mountFrameworkApplication(props){
     const {
       frameworks,
       framework,
       application
-    } = this.props;
+    } = props;
     const container = this.refs.container;
 
     let theApplication = UnknownFramework(framework, application);
@@ -51,7 +51,6 @@ export default class FrameworkApplication extends Component {
         theApplication = applications[application];
         const unmount = theFramework.mount(container, theApplication);
         this.setState({unmount});
-        return;
       }
     }
 

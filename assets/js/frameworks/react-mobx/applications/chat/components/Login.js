@@ -35,9 +35,7 @@ export default class Login extends Component{
       loading,
       error
     } = this.props.loginModel;
-
-    console.log(error);
-
+    
     return <div className="chat-login">
       
       
