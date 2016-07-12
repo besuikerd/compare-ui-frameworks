@@ -5,3 +5,17 @@ $fa-font-path: "../../node_modules/font-awesome/fonts";
 @import '~font-awesome/scss/font-awesome';
 
 @import './todo.scss';
+
+
+.table-fullwidth{
+  width: 100%;
+
+  select{
+    width: 100%;
+    white-space:pre-wrap;
+  }
+}
+
+.alert pre{
+  word-wrap: break-word;
+}

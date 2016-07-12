@@ -8,6 +8,7 @@ const tables = requireDir('../lib/tables');
 const escape = require('escape-html');
 const database = require('../lib/database');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 module.exports = (app) => {
   Object.keys(tables).forEach(tableName => {
@@ -64,12 +65,15 @@ module.exports = (app) => {
     });
 
     router.get(`/${tableName}/new`, (req, res) => {
-      req.db[tableName].findAsync({}).then(docs => {
+      req.db[tableName].find({}).sort({created_at: 1}).execAsync().then(docs => {
         const dependencies = database.getDependencies(table.schema);
         Promise.reduce(dependencies, (deps, dep) => {
           return req.db[dep].findAsync({}).then(depItems => {
+            //omit timestamps
+            const ommitedDepItems = _.map(depItems, (dep) => _.omit(dep, ['created_at', 'last_modified']));
+
             const obj = {};
-            obj[dep] = depItems;
+            obj[dep] = ommitedDepItems;
             return Object.assign({}, deps, obj);
           });
         }, {}).then(deps => {
@@ -111,7 +115,7 @@ module.exports = (app) => {
         res.render('error', {error: new Error('No query object parameter sent')});
       } else{
         try{
-          const parsed = JSON.parse(query)
+          const parsed = JSON.parse(query);
           req.db[tableName].findOne(parsed, (err, docs) => {
             if(err) {
               res.render('error', {error: err});
@@ -129,6 +133,11 @@ module.exports = (app) => {
     router.post(`/${tableName}`, (req, res) => {
       const obj = parseEntity(req,res);
       if(obj){
+        const timestamp = new Date();
+        console.log('date', timestamp)
+        obj.created_at = timestamp;
+        obj.last_modified = timestamp;
+
         req.db[tableName].insert(obj);
         req.io.of(`/${tableName}`).emit('create', obj);
         req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
@@ -148,12 +157,12 @@ module.exports = (app) => {
           res.redirect(`/api/${tableName}/new`);
         });
       });
-    })
+    });
 
     router.put(`/${tableName}/:id`, (req, res) => {
       const obj = parseEntity(req, res);
       if(obj) {
-        console.log(obj);
+        obj.last_modified = new Date();
         req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> in ${tableName}`)
         req.db[tableName].update({_id: req.params['id']}, obj);
         req.io.of(`/${tableName}`).emit('update', obj);
@@ -163,4 +172,4 @@ module.exports = (app) => {
   });
 
   return router;
-}
+};
