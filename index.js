@@ -30,7 +30,7 @@ const handlebars = require('express-handlebars').create({
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars.engine);
 
-if(process.env.UGLY === undefined){
+if(process.env.UGLY !== 'true'){
   app.use(webpackDevMiddleware(webpackCompiler, {
     publicPath: '/',
 

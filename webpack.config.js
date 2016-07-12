@@ -17,7 +17,7 @@ module.exports = {
   output: {
     path: '/',
     publicPath: 'http://localhost:3000/',
-    filename: "[name].js",
+    filename: '[name].js',
     chunkFilename: '[chunkhash.js]'
   },
 
@@ -26,9 +26,10 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel",
+        loader: 'babel',
         query: {
-          presets: ["es2015", "stage-0", "react"]
+          presets: ['es2015', 'stage-0', 'react'],
+          plugins: ['babel-plugin-transform-decorators-legacy']
         }
       },
 
@@ -55,8 +56,8 @@ module.exports = {
 
 
       //fonts
-      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' },
 
       //put React in the global namespace
       { test: require.resolve('react'), loader: 'expose?React' }
@@ -64,9 +65,9 @@ module.exports = {
   },
   postcss: [autoprefixer],
 
-  devtool: "eval-source-map",
+  devtool: 'eval-source-map',
   resolve: {
-    modulesDirectories: [ "node_modules", path.join(__dirname, 'assets/js'), path.join(__dirname, 'assets') ]
+    modulesDirectories: [ 'node_modules', path.join(__dirname, 'assets/js'), path.join(__dirname, 'assets') ]
   },
 
   plugins: [

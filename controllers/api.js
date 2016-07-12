@@ -58,8 +58,7 @@ module.exports = (app) => {
         if(err) {
           res.render('error', {error: err});
         } else{
-          // req.io.of(`/${tableName}`.emit('read', docs));
-          res.json(docs);
+          database.resolveDependencies(req.db, table.schema, docs).then(docs => res.json(docs));
         }
       })
     });
@@ -99,7 +98,7 @@ module.exports = (app) => {
             if(err) {
               res.render('error', {error: err});
             } else{
-              res.json(docs)
+              database.resolveDependencies(req.db, schema, docs).then(docs => res.json(docs));
             }
           })
         } catch(e){
