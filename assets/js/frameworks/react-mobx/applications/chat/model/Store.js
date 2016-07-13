@@ -156,6 +156,7 @@ export default class Store {
 
   @autobind
   logout(){
+    this.leaveChannel();
     this.user = null;
   }
 }

@@ -22,7 +22,7 @@ export default class Chat extends Component{
       user,
     } = store;
 
-    const loading = !messages || !channels || true;
+    const loading = !messages || !channels;
 
     return <div className="chat">
       <Loading visible={loading}/>
