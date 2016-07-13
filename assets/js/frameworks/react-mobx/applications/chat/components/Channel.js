@@ -1,11 +1,14 @@
 import { Component } from 'react';
 import { autobind } from 'core-decorators';
+import classnames from 'classnames';
 
 export default class Channel extends Component{
 
   @autobind
   joinChannel(){
-    this.props.join(this.props.channel);
+    if(!this.props.active){
+      this.props.join(this.props.channel);
+    }
   }
 
   render(){
@@ -14,6 +17,6 @@ export default class Channel extends Component{
       active,
     } = this.props;
 
-    return <span enabled={!active} onClick={this.joinChannel}>#{channel.name}</span>
+    return <span className={classnames({channel: true, 'chat-channel-active': active})} onClick={this.joinChannel}>#{channel.name}</span>
   }
 }

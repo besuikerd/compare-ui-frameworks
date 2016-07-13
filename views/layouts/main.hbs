@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document</title>
 </head>
 <body>
     <script src="/styles.js"></script>
     {{#with flash}}
-        <span class="alert alert-warning">
+        <div class="alert alert-warning">
             <ul>
                 {{#each warning}}
                     <li>
@@ -15,10 +16,10 @@
                     </li>
                 {{/each}}
             </ul>
-        </span>
+        </div>
 
 
-        <span class=".alert alert-info">
+        <div class="alert alert-info">
             <ul>
                 {{#each info}}
                     <li>
@@ -31,7 +32,7 @@
                     </li>
                 {{/each}}
             </ul>
-        </span>
+        </div>
 
     {{/with}}
     {{{body}}}

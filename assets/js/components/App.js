@@ -21,7 +21,7 @@ export default class App extends Component {
       }
     }
 
-    return <div>
+    return <div className="app-instance">
       <Frameworks frameworks={Object.keys(frameworks)}/>
       {
         applicationView

@@ -12,10 +12,10 @@ export default {
   mount: (container, App) => {
     console.log(App);
 
-    const wrappedApplication = <div>
+    const wrappedApplication = <div className="flex-vertical">
       <DevTools/>
       <App/>
-    </div>
+    </div>;
     render(wrappedApplication, container);
     return () => unmountComponentAtNode(container);
   }

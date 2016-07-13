@@ -1,7 +1,108 @@
+@import './utils';
+
+$gray: #ab9ba9;
+
+
+.chat{
+  flex: 1 auto;
+  display: flex;
+  width: 100%;
+}
+
+.chat-panel{
+  padding-left: 20px;
+  padding-right: 50px;
+  background-color: #4d394b;
+  color: $gray;
+}
+
+.chat-panel-header{
+  font-size: 1.1em;
+}
+
+.chat-channels{
+}
+
+.chat-channel-list{
+  margin-left: 1em;
+}
+
+.chat-channel{
+
+}
+
+.chat-channel-active{
+  color: white;
+  font-weight: bold;
+}
+
+.chat-users{
+
+}
+
+.chat-user{
+}
+
+.chat-user-list{
+  margin-left: 1em;
+}
+
+.chat-user-active{
+  color: white;
+  font-weight: bold;
+}
+
+
 .chat-login{
   position: relative;
 }
 
-.chat-chat{
-  position: relative;
+.chat-logout{
+}
+
+
+.chat-message-panel{
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  border: solid $gray;
+  border-width: 1px 1px 0 0;
+  width: calc(100% - 200px);
+}
+
+.chat-messages{
+  padding: 10px 20px 0 20px;
+  flex: 1 auto;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+}
+
+.chat-input{
+  fieldset {
+    padding: 0;
+  }
+}
+
+.chat-input-fields{
+  display: flex;
+}
+
+.chat-input-field{
+  flex: 1 auto;
+}
+
+.chat-message-name{
+
+}
+
+.chat-message-message{
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.chat-message-time{
+  color: $gray;
+  margin-left: 10px;
+  vertical-align: middle;
+  font-size: 0.9em;
 }

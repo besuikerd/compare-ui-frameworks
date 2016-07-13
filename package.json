@@ -29,6 +29,7 @@
     "mobx": "^2.3.4",
     "mobx-react": "^3.4.0",
     "mobx-react-devtools": "^4.2.0",
+    "moment": "^2.14.1",
     "morgan": "^1.7.0",
     "nedb": "^1.8.0",
     "purecss-sass": "^0.6.0",

@@ -61,7 +61,7 @@ export default class FrameworkApplication extends Component {
   }
 
   render(){
-    return <div ref="container">
+    return <div className="application-container" ref="container">
     </div>
   }
 }

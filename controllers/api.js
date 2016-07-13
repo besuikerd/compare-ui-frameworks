@@ -16,11 +16,7 @@ module.exports = (app) => {
     const schema = table.schema;
 
     const namespace = app.io.of(`/${tableName}`);
-    namespace.on('connection', (socket) => {
-      const query = socket.request._query;
-      namespace.emit('connected', query);
-      socket.on('disconnect', () => namespace.emit('disconnected', query));
-    });
+
 
     function parseEntity(req, res){
       const params = req.body;
@@ -87,7 +83,6 @@ module.exports = (app) => {
     });
 
     router.get(`/${tableName}/find`, (req, res) => {
-      console.log('params', req.params);
       const query = req.param('query');
       if(query === undefined){
         res.render('error', {error: new Error('No query object parameter sent')});
@@ -98,7 +93,7 @@ module.exports = (app) => {
             if(err) {
               res.render('error', {error: err});
             } else{
-              database.resolveDependencies(req.db, schema, docs).then(docs => res.json(docs));
+              database.resolveDependencies(req.db, table.schema, docs).then(docs => res.json(docs));
             }
           })
         } catch(e){
@@ -133,15 +128,21 @@ module.exports = (app) => {
       const obj = parseEntity(req,res);
       if(obj){
         const timestamp = new Date();
-        console.log('date', timestamp)
         obj.created_at = timestamp;
         obj.last_modified = timestamp;
 
-        req.db[tableName].insert(obj);
-        req.io.of(`/${tableName}`).emit('create', obj);
-        req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
+        req.db[tableName].insertAsync(obj).then((obj) => {
+          database.resolveDependencies(req.db, schema, [obj]).then(([resolvedObj]) => {
+            console.log('obj', obj);
+            console.log('resolvedObj', resolvedObj);
+            req.io.of(`/${tableName}`).emit('create', resolvedObj);
+            req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
+            res.redirect(`${tableName}/new`);
+          });
+        });
+      } else{
+        res.redirect(`${tableName}/new`);
       }
-      res.redirect(`${tableName}/new`);
     });
 
     router.delete(`/${tableName}/:id`, (req, res) => {
@@ -168,7 +169,24 @@ module.exports = (app) => {
       }
       res.redirect(`/api/${tableName}/new`);
     })
+
+
+    let sockets = [];
+    namespace.on('connection', (socket) => {
+      const query = socket.request._query;
+      namespace.emit('connected', query);
+      sockets.push(query);
+      socket.on('disconnect', () => {
+        sockets = sockets.filter(q => q !== query)
+        namespace.emit('disconnected', query)
+      });
+    });
+
+    router.get(`/${tableName}/sockets`, (req, res) => {
+      res.json(sockets);
+    });
   });
+
 
   return router;
 };
