@@ -29,7 +29,9 @@ export default class Chat extends Component{
       <div className="chat-panel">
         <Channels join={store.joinChannel} channel={channel} channels={channels || []} />
         <Users users={users || []}/>
-        <button className="pure-button pure-button-secondary chat-logout" onClick={store.logout}>Logout</button>
+        <div className="chat-logout">
+          <button className="pure-button pure-button-secondary" onClick={store.logout}>Logout</button>
+        </div>
       </div>
       <div className="chat-message-panel">
         {

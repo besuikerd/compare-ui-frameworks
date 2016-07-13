@@ -10,10 +10,13 @@ $gray: #ab9ba9;
 }
 
 .chat-panel{
+  width: 150px;
   padding-left: 20px;
-  padding-right: 50px;
+  padding-right: 30px;
   background-color: #4d394b;
   color: $gray;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-panel-header{
@@ -58,6 +61,15 @@ $gray: #ab9ba9;
 }
 
 .chat-logout{
+  flex: 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+
+  button{
+    width: 100%;
+  }
 }
 
 
