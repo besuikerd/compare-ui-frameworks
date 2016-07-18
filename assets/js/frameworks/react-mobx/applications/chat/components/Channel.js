@@ -17,6 +17,6 @@ export default class Channel extends Component{
       active,
     } = this.props;
 
-    return <span className={classnames({channel: true, 'chat-channel-active': active})} onClick={this.joinChannel}>#{channel.name}</span>
+    return <span className={classnames({'chat-channel': true, 'chat-channel-active': active})} onClick={this.joinChannel}>#{channel.name}</span>
   }
 }

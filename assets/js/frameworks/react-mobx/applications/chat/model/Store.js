@@ -153,7 +153,6 @@ export default class Store {
     });
   }
 
-
   @autobind
   logout(){
     this.leaveChannel();

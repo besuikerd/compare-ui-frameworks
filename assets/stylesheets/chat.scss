@@ -31,7 +31,7 @@ $gray: #ab9ba9;
 }
 
 .chat-channel{
-
+  cursor: pointer;
 }
 
 .chat-channel-active{
@@ -58,6 +58,8 @@ $gray: #ab9ba9;
 
 .chat-login{
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .chat-logout{
@@ -78,7 +80,7 @@ $gray: #ab9ba9;
   flex: 1 1 auto;
   flex-direction: column;
   border: solid $gray;
-  border-width: 1px 1px 0 0;
+  border-width: 1px 0 0 0;
   width: calc(100% - 200px);
 }
 
@@ -118,3 +120,4 @@ $gray: #ab9ba9;
   vertical-align: middle;
   font-size: 0.9em;
 }
+
