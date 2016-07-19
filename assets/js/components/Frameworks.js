@@ -1,11 +1,12 @@
 import { Component, PropTypes } from 'react';
 import {Link, routerShape} from 'react-router'
 import R from 'ramda';
+import _ from 'lodash';
 import classNames from 'classnames';
 
 export default class Frameworks extends Component{
   static propTypes = {
-    frameworks: PropTypes.array.isRequired
+    frameworks: PropTypes.object.isRequired
   };
 
   static contextTypes = {
@@ -13,21 +14,28 @@ export default class Frameworks extends Component{
   };
 
   render(){
-    const { frameworks, children } = this.props;
+    const { frameworks, children, params: {application} } = this.props;
     const { router } = this.context;
     const menuItems =
-      R.map(
-        (framework) => {
-          const path = `'/frameworks/'${framework}`
+      _.map(frameworks,
+        (framework, name) => {
+          const path = `'/frameworks/'${name}`
+
+
+          let currentApplicationLink = <div className="pure-menu-link-empty">{" "}</div>;
+          if(_.includes(Object.keys(framework.applications), application)){
+            currentApplicationLink = <Link className="pure-menu-link" to={`/${name}/${application}`}>{application}</Link>
+          }
 
           const className = classNames(
             'pure-menu-item',
-            {'pure-menu-selected': router.isActive('/' + framework)}
+            {'pure-menu-selected': router.isActive('/' + name)}
           );
-          return <li className={className} key={framework}>
-            <Link className="pure-menu-link" to={"/" + framework}>{framework}
-            </Link></li>
-        } , frameworks);
+          return <li className={className} key={name}>
+            <Link className="pure-menu-link" to={"/" + name}>{name}</Link>
+            { currentApplicationLink }
+          </li>
+        });
 
     return <div className="pure-menu pure-menu-horizontal">
       <ul className="pure-menu-list">

@@ -22,7 +22,7 @@ export default class App extends Component {
     }
 
     return <div className="app-instance">
-      <Frameworks frameworks={Object.keys(frameworks)}/>
+      <Frameworks {...{frameworks, params}}/>
       {
         applicationView
       }
