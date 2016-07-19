@@ -10,8 +10,6 @@ export default {
   description: readme,
   applications,
   mount: (container, App) => {
-    console.log(App);
-
     const wrappedApplication = <div className="flex-vertical">
       <DevTools/>
       <App/>

@@ -1,5 +1,6 @@
 import store, {actionTypes} from '../actions/store';
 import _ from 'lodash';
+import $ from 'jquery';
 
 export const initialState = {
   messages: [],
@@ -37,6 +38,24 @@ export default function StoreReducer(state = initialState, action){
         return Object.assign({}, state, {messages});
       }
       return state;
+    case actionTypes.sendMessage: {
+      const {
+        textInput,
+        user,
+        channel
+      } = state;
+
+      $.post('/api/messages', {
+        channel: channel._id,
+        user: user._id,
+        message: textInput
+      });
+
+      const update = {
+        textInput: ''
+      };
+      return Object.assign({}, state, update);
+    }
     default:
       return state;
   }

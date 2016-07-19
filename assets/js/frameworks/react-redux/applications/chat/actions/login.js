@@ -47,7 +47,10 @@ function login(){
     dispatch(setLoading(true));
     return dispatch(authenticate(username, password))
       .catch(error => dispatch(setError(error.message)))
-      .then(() => dispatch(store.initialize()));
+      .then(() => {
+        dispatch(setLoading(false))
+        dispatch(store.initialize())
+      });
   }
 }
 

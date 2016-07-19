@@ -17,7 +17,8 @@ export const actionTypes = {
   setTextInput: 'SET_TEXT_INPUT',
   userConnected: 'USER_CONNECTED',
   userDisconnected: 'USER_DISCONNECTED',
-  messageSent: 'MESSAGE_SENT'
+  messageSent: 'MESSAGE_SENT',
+  sendMessage: 'SEND_MESSAGE'
 };
 
 
@@ -63,52 +64,57 @@ function setTextInput(textInput){
   };
 }
 
-function userConnected(userId, channelId){
+function sendMessage(){
+  return {
+    type: actionTypes.sendMessage
+  }
+}
+
+function userConnected(userId, channel){
   return (dispatch, getState) => {
     const {
-      channel,
+      channel: currentChannel,
+      user,
       users
     } = getState().store;
 
-    if(channelId === channel._id && userId && !_.some(users, u => u._id === userId)){
-      const {
-        users,
-        channel
-      } = getState().store;
-
+    if(channel._id === currentChannel._id && userId && !_.some(users, u => u._id === userId)){
       const query = {_id: userId};
-      if(channelId === channel._id && !_.some(users, u => u._id === userId)) {
-        $.get(`/api/users/find?query=${JSON.stringify(query)}`).then(([user]) => {
-          dispatch(setUsers(users.concat(user)));
+      $.get(`/api/users/find?query=${JSON.stringify(query)}`).then(([joinedUser]) => {
+        dispatch(setUsers(users.concat(joinedUser)));
+        if(userId !== user._id){
           dispatch(messageSent({
             _id: `message_${idGen()}`,
-            message: `${user.name} joined #${channel.name}`,
+            message: `${joinedUser.name} joined #${channel.name}`,
             user: { name: `bot@${channel.name}`, _id: `user_${idGen()}`},
-            channel: channelId
+            channel: channel
           }));
-        });
-      }
+        }
+      });
     }
   };
 }
 
 
-function userDisconnected(userId, channelId){
+function userDisconnected(userId, channel){
   return (dispatch, getState) => {
     const {
-      channel,
+      channel: currentChannel,
+      user,
       users
     } = getState().store;
-    if(channelId === channel._id && userId){
-      const user = _.find(users, u => u._id === userId);
-      if(user){
+    if(channel._id === currentChannel._id && userId){
+      const leavingUser = _.find(users, u => u._id === userId);
+      if(leavingUser){
         dispatch(setUsers(users.filter(u => u._id !== userId)));
-        dispatch(messageSent({
-          _id: `message_${idGen()}`,
-          message: `${user.name} left #${channel.name}`,
-          user: { name: `bot@${channel.name}`, _id: `user_${idGen()}`},
-          channel: channelId
-        }))
+        if(userId !== user._id){
+          dispatch(messageSent({
+            _id: `message_${idGen()}`,
+            message: `${leavingUser.name} left #${channel.name}`,
+            user: { name: `bot@${channel.name}`, _id: `user_${idGen()}`},
+            channel: channel
+          }))
+        }
       }
     }
   }
@@ -136,7 +142,6 @@ function joinChannel(channel){
         dispatch(setChannel(channel));
         return dispatch(loadUsers())
           .then(() => dispatch(loadMessages()))
-          .then(() => dispatch(connectSocket()))
           .then(() => dispatch(connectSocket()));
       });
   }
@@ -149,8 +154,8 @@ function leaveChannel(){
     } = getState().store;
 
     if(channel !== null){
-      dispatch(session.disconnect());
       dispatch(setChannel(null));
+      dispatch(session.disconnect());
     }
     return Promise.resolve(null);
   }
@@ -222,5 +227,7 @@ export default {
   initialize,
   messageSent,
   logout,
-  joinChannel
+  joinChannel,
+  setTextInput,
+  sendMessage
 };

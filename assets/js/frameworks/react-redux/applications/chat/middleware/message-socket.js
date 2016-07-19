@@ -12,28 +12,34 @@ export default function(){
     switch(action.type){
       case actionTypes.connect:
         const { channel, user } = action;
-        socket = io.connect(`/messages?channel=${channel._id}&user=${user._id}`, {
-          reconnection: true,
-          reconnectionDelay: 1000,
-          reconnectionDelayMax : 60000,
-          reconnectionAttempts: 60
-        });
+        if(socket !== null){
+          socket.disconnect();
+        }
 
-        socket.on('create', (message) => {
-          dispatch(store.messageSent(message))
-        });
+        if(channel !== null){
+          socket = io.connect(`/messages?channel=${channel._id}&user=${user._id}`, {
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax : 60000,
+            reconnectionAttempts: 60
+          });
 
-        socket.on('connected', (socket) => {
-          if(socket.user !== undefined && socket.channel !== undefined){
-            dispatch(store.userConnected(socket.user, socket.channel));
-          }
-        });
+          socket.on('create', (message) => {
+            dispatch(store.messageSent(message))
+          });
 
-        socket.on('disconnected', (socket) => {
-          if(socket.user !== undefined && socket.channel !== undefined){
-            dispatch(store.userDisconnected(socket.user, socket.channel));
-          }
-        });
+          socket.on('connected', (socket) => {
+            if(socket.user !== undefined && socket.channel !== undefined && socket.channel === channel._id){
+              dispatch(store.userConnected(socket.user, channel));
+            }
+          });
+
+          socket.on('disconnected', (socket) => {
+            if(socket.user !== undefined && socket.channel !== undefined && socket.channel === channel._id){
+              dispatch(store.userDisconnected(socket.user, channel));
+            }
+          });
+        }
         break;
       case actionTypes.disconnect:
         if(socket !== null){

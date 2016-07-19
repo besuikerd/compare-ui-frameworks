@@ -11,10 +11,10 @@ tables.forEach(table => {
     reconnectionAttempts: 60
   });
 
-  socket.on('create', (obj) => console.log(`[${table}] created`, obj));
-  socket.on('update', (obj) => console.log(`[${table}] updated`, obj));
-  socket.on('delete', (obj) => console.log(`[${table}] deleted`, obj));
-  socket.on('connected', (obj) => console.log(`[${table}] connected`, obj));
-  socket.on('disconnected', (obj) => console.log(`[${table}] disconnected`, obj));
+  // socket.on('create', (obj) => console.log(`[${table}] created`, obj));
+  // socket.on('update', (obj) => console.log(`[${table}] updated`, obj));
+  // socket.on('delete', (obj) => console.log(`[${table}] deleted`, obj));
+  // socket.on('connected', (obj) => console.log(`[${table}] connected`, obj));
+  // socket.on('disconnected', (obj) => console.log(`[${table}] disconnected`, obj));
 });
 

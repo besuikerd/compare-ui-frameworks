@@ -20,8 +20,6 @@ export default ({
         <button className="pure-button pure-button-secondary" onClick={logout}>Logout</button>
       </div>
     </div>
-    <div className="chat-message-panel">
-      <MessagesContainer/>
-    </div>
+    <MessagesContainer/>
   </div>;
 }

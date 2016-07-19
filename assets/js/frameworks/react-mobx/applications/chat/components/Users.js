@@ -10,8 +10,6 @@ export default class Users extends Component{
       users
     } = this.props;
 
-
-    console.log(users.map(u => u._id));
     const userElements = users.map(user => <li key={user._id}><User {...{user}}/></li>)
 
     return <div className="chat-users">

@@ -5,7 +5,6 @@ export default ({
   activeChannel,
   joinChannel
 }) => {
-  console.log('channels', channels, activeChannel)
   const channelElements = channels.map(channel => <li key={channel._id}><Channel active={activeChannel !== null ? activeChannel._id === channel._id : false} {...{joinChannel, channel}}/></li>);
 
   return <div className="chat-channels">

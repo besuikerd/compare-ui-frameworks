@@ -88,8 +88,8 @@ module.exports = (app) => {
         res.render('error', {error: new Error('No query object parameter sent')});
       } else{
         try{
-          const parsed = JSON.parse(query)
-          req.db[tableName].find(parsed, (err, docs) => {
+          const parsed = JSON.parse(query);
+          req.db[tableName].find(parsed).sort({created_at: 1}).exec((err, docs) => {
             if(err) {
               res.render('error', {error: err});
             } else{
