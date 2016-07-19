@@ -23,8 +23,9 @@ export default class Frameworks extends Component{
 
 
           let currentApplicationLink = <div className="pure-menu-link-empty">{" "}</div>;
-          if(_.includes(Object.keys(framework.applications), application)){
-            currentApplicationLink = <Link className="pure-menu-link" to={`/${name}/${application}`}>{application}</Link>
+          const currentApplicationName = _.find(Object.keys(framework.applications), e => e.toLowerCase() === application.toLowerCase());
+          if(currentApplicationName !== undefined){
+            currentApplicationLink = <Link className="pure-menu-link" to={`/${name}/${currentApplicationName}`}>{currentApplicationName}</Link>
           }
 
           const className = classNames(
