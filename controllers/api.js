@@ -10,6 +10,10 @@ const database = require('../lib/database');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
+function isXHR(req){
+  return req.header('X-Requested-With') === 'XMLHttpRequest';
+}
+
 module.exports = (app) => {
   Object.keys(tables).forEach(tableName => {
     const table = tables[tableName];
@@ -125,6 +129,7 @@ module.exports = (app) => {
 
 
     router.post(`/${tableName}`, (req, res) => {
+      const xhr = isXHR(req);
       const obj = parseEntity(req,res);
       if(obj){
         const timestamp = new Date();
@@ -133,42 +138,60 @@ module.exports = (app) => {
 
         req.db[tableName].insertAsync(obj).then((obj) => {
           database.resolveDependencies(req.db, schema, [obj]).then(([resolvedObj]) => {
-            console.log('obj', obj);
-            console.log('resolvedObj', resolvedObj);
             req.io.of(`/${tableName}`).emit('create', resolvedObj);
-            req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
-            res.redirect(`${tableName}/new`);
+            if(!xhr){
+              req.flash('info_unsafe', `added <pre>${escape(JSON.stringify(obj))}</pre> to ${tableName}`);
+              res.redirect(`${tableName}/new`);
+            } else{
+              res.end();
+            }
           });
         });
-      } else{
+      } else if(!xhr) {
         res.redirect(`${tableName}/new`);
+      } else{
+        res.end();
       }
     });
 
     router.delete(`/${tableName}/:id`, (req, res) => {
       const _id = req.params['id'];
-
       const obj = req.db[tableName].findOne({_id}, (err, obj) => {
         if(err) throw err;
         req.db[tableName].remove({_id: req.params['id']}, (err) => {
           if(err) throw err;
           req.io.of(`/${tableName}`).emit('delete', obj);
-          req.flash('info_unsafe', `removed <pre>${escape(JSON.stringify(obj))}</pre> from ${tableName}`);
-          res.redirect(`/api/${tableName}/new`);
+
+          if(!isXHR(req)){
+            req.flash('info_unsafe', `removed <pre>${escape(JSON.stringify(obj))}</pre> from ${tableName}`);
+            res.redirect(`/api/${tableName}/new`);
+          } else{
+            res.end();
+          }
         });
       });
     });
 
     router.put(`/${tableName}/:id`, (req, res) => {
+      const xhr = isXHR(req);
       const obj = parseEntity(req, res);
       if(obj) {
+        const _id = req.params['id'];
         obj.last_modified = new Date();
-        req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> in ${tableName}`)
-        req.db[tableName].update({_id: req.params['id']}, obj);
+        obj._id = _id;
+
+        if(!xhr) {
+          req.flash('info_unsafe', `updated  <pre>${escape(JSON.stringify(obj))}</pre> in ${tableName}`)
+        }
+        req.db[tableName].update({_id}, obj);
         req.io.of(`/${tableName}`).emit('update', obj);
       }
-      res.redirect(`/api/${tableName}/new`);
-    })
+      if(!xhr){
+        res.redirect(`/api/${tableName}/new`);
+      } else{
+        res.end();
+      }
+    });
 
 
     let sockets = [];

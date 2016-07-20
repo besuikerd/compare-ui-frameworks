@@ -1,13 +1,17 @@
+.todo-panel{
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .todo-input{
-
+  display: flex;
 }
 
-.todo-item{
+.todo-input-field{
+  flex: 1 auto;
 }
 
-.button-remove{
+.todo-input-button{
 
-}
-
-.todo-list{
 }
