@@ -56,21 +56,19 @@ app.use((req, res, next) => {
   next();
 });
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride(function(req, res){
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     // look in urlencoded POST bodies and delete it
-    var method = req.body._method
-    delete req.body._method
+    var method = req.body._method;
+    delete req.body._method;
     return method
   }
 }));
 
 
-
-
 database.load('db', true).then(db => {
-  const server = http.Server(app)
+  const server = http.Server(app);
   const socket = io(server);
   app.io = socket;
 
@@ -84,14 +82,14 @@ database.load('db', true).then(db => {
   const router = require('./router')(app);
   app.use('/', router);
 
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
   });
 
 
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -99,5 +97,7 @@ database.load('db', true).then(db => {
     });
   });
 
-  server.listen(port, () => console.log(`server listening on port ${port}`));
+  server.listen(port, () => {
+    console.log(`server listening on port ${port}`)
+  });
 });

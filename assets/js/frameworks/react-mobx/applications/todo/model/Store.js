@@ -28,7 +28,12 @@ export default class Store{
 
   @computed
   get pendingCount(){
-    return this.todos.reduce((sum, todo) => sum + (todo.completed ? 0 : 1));
+    return this.todos.reduce((sum, todo) => sum + (todo.finished ? 0 : 1), 0);
+  }
+
+  @computed
+  get completedCount(){
+    return this.todos.length - this.pendingCount;
   }
 
   @autobind
@@ -63,6 +68,33 @@ export default class Store{
     });
   };
 
+  @autobind
+  toggleAll(){
+    const query = {_id: {$in: this.visibleTodos.map(todo => todo._id)}};
+    const update = {$set: {finished: this.pendingCount !== 0}};
+
+    $.ajax({
+      url: '/api/todos',
+      type: 'PUT',
+      data: JSON.stringify({query, update}),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json'
+    })
+  }
+
+  @autobind
+  clearCompleted(){
+    const query = {_id: {$in: this.todos.filter(todo => todo.finished).map(todo => todo._id)}};
+
+    $.ajax({
+      url: '/api/todos',
+      type: 'DELETE',
+      data: JSON.stringify({query}),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json'
+    })
+  }
+
   deleteTodo(todo){
     $.ajax({
       url: `/api/todos/${todo._id}`,
@@ -70,6 +102,7 @@ export default class Store{
     });
   }
 
+  @autobind
   setFilter(filter){
     this.filter = filter;
   }
@@ -94,7 +127,6 @@ export default class Store{
     });
 
     socket.on('update', todo => {
-      console.log(todo);
       this.todos = this.todos.map(t => t._id === todo._id ? todo : t);
     })
   }

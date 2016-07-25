@@ -107,7 +107,6 @@ module.exports = (app) => {
     });
 
     router.get(`/${tableName}/findOne`, (req, res) => {
-      console.log('params', req.params);
       const query = req.param('query');
       if(query === undefined){
         res.render('error', {error: new Error('No query object parameter sent')});
@@ -172,6 +171,32 @@ module.exports = (app) => {
       });
     });
 
+    router.delete(`/${tableName}`, (req, res) => {
+      const xhr = isXHR(req);
+
+      const {
+        query
+      } = req.body;
+
+      if(query){
+        req.db[tableName].findAsync(query).then(docs => {
+          req.db[tableName].removeAsync(query, {multi: true}).then((numRemoved) => {
+
+            if(numRemoved !== docs.length){
+              throw new Error('concurrent modification');
+            }
+            docs.forEach(doc => req.io.of(`/${tableName}`).emit('delete', doc));
+          })
+        })
+      }
+
+      if(!xhr){
+        res.redirect(`/api/${tableName}/new`);
+      } else{
+        res.end();
+      }
+    });
+
     router.put(`/${tableName}/:id`, (req, res) => {
       const xhr = isXHR(req);
       const obj = parseEntity(req, res);
@@ -193,6 +218,24 @@ module.exports = (app) => {
       }
     });
 
+    router.put(`/${tableName}`, (req, res) => {
+      const xhr = isXHR(req);
+
+      const {
+        query,
+        update
+      } = req.body;
+
+      req.db[tableName].update(query, update, {multi: true, returnUpdatedDocs: true}, (err, numUpdated, docs) => {
+        docs.forEach(doc => req.io.of(`/${tableName}`).emit('update', doc));
+        if(!xhr){
+          res.redirect(`/api/${tableName}/new`);
+        } else{
+          res.end();
+        }
+      });
+    });
+
 
     let sockets = [];
     namespace.on('connection', (socket) => {
@@ -200,7 +243,7 @@ module.exports = (app) => {
       namespace.emit('connected', query);
       sockets.push(query);
       socket.on('disconnect', () => {
-        sockets = sockets.filter(q => q !== query)
+        sockets = sockets.filter(q => q !== query);
         namespace.emit('disconnected', query)
       });
     });

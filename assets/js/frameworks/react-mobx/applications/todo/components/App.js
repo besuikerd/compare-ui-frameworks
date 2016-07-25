@@ -13,6 +13,7 @@ export default class App extends Component{
     return <div className="todo-panel">
       <TodoInput store={store.todoInput}/>
       <Todos {...{store}}/>
+      <hr/>
       <TodoFooter {...{store}}/>
     </div>
   }
