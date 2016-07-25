@@ -1,4 +1,25 @@
-import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import url from 'url';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
-export default () => <div>TODO</div>;
+import todo from './actions/todo';
+import reducer from './reducers';
+
+
+import App from './components/App';
+
+const store = createStore(
+  reducer,
+  applyMiddleware(
+    thunk,
+    logger()
+  )
+);
+
+store.dispatch(todo.connect());
+
+export default () => <Provider store={store}>
+  <App/>
+</Provider>;
